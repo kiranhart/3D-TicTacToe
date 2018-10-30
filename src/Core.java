@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -55,6 +56,7 @@ public class Core {
 			Button button = new Button(shell, SWT.PUSH);
 			button.setSize(new Point(60, 60));
 			button.setLocation(new Point(x, y));
+			button.setText((ThreadLocalRandom.current().nextInt(0, 2) == 0 ? "O" : "X"));
 			button.setVisible(true);
 			x += 60;
 			if (x == 180) {
@@ -64,7 +66,7 @@ public class Core {
 			gridButtons.add(button);
 		}
 	}
-
+	
 	/*
 	 * This is the main method, the program will call this method and run any
 	 * code within this class upon pressing start
