@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -31,7 +32,7 @@ public class Core {
 		generateGridButtons();
 
 		shell.pack();
-		shell.setSize(200, 600);
+		shell.setSize(196, 637);
 		shell.setVisible(true);
 
 		// Check for if the x button is closed.
@@ -58,11 +59,24 @@ public class Core {
 			button.setLocation(new Point(x, y));
 			button.setText((ThreadLocalRandom.current().nextInt(0, 2) == 0 ? "O" : "X"));
 			button.setVisible(true);
+			
 			x += 60;
 			if (x == 180) {
 				x = 0;
 				y += 60;
+				
+				/*
+				 * Add Spacer in between the grids
+				 */
+				if (y == 180 || y == 380 || y == 580) {
+					Button filler = new Button(shell, SWT.PUSH);
+					filler.setSize(new Point(180, 20));
+					filler.setLocation(new Point(x, y));
+					filler.setVisible(true);
+					y += 20;
+				}
 			}
+			
 			gridButtons.add(button);
 		}
 	}
