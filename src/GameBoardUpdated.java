@@ -3,7 +3,7 @@ public class GameBoardUpdated {
 	public static String playerFree = " ";
 	public static String playerX = "X";
 	public static String playerO = "O";
-    //This represents the possibilities of 1:0 to 8, 2: 9 to 17, 3: 18 to 36 on the dimensions of the gameboard
+    //This represents the possibilities of 1 to 8, 9 to 17, 18 to 36 on the dimensions of the GameBoard
 	private String[] gameBoard = new String[36];
 
 	public GameBoardUpdated() {
