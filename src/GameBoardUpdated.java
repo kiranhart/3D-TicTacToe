@@ -3,11 +3,12 @@ public class GameBoardUpdated {
 	public static String playerFree = " ";
 	public static String playerX = "X";
 	public static String playerO = "O";
+	
     //This represents the possibilities of 1 to 8, 9 to 17, 18 to 36 on the dimensions of the GameBoard
 	private String[] gameBoard = new String[36];
 
 	public GameBoardUpdated() {
-		// Initialize the game board to an empty state
+		//Initialize the game board to an empty state
 		for( int i = 0; i < gameBoard.length; i++)
 			gameBoard[i] = playerFree; 
 
@@ -38,12 +39,14 @@ public class GameBoardUpdated {
 		return col + 1;
 	}
 
+	//Returns Free, X, or O depending how the board space is occupied
 	public String checkMove(int lvl, int row, int col) {
 		//Checks if there are any valid or invalid board positions
 		int map = mapFromLvlRowCol(lvl, row, col);
 		return gameBoard[map];
 	}
 	
+	//Returns true/false depending if move is valid
 	public boolean makeMove(String playerXO,int lvl, int row, int col) {
 		//Checks to see if the user input is valid when they select a letter
 		if (playerX != "X" || playerO != "O") //If not equal to correct String  
@@ -51,7 +54,7 @@ public class GameBoardUpdated {
 	       return false; //Return as invalid
 	    }
 	   
-		//Checks if Board position occupied/taken
+		//Checks if Board position is occupied/taken
 		if (checkMove(lvl, row, col)  != playerFree) {
 			return false; //Returns false (invalid) if taken
 		}
@@ -59,7 +62,6 @@ public class GameBoardUpdated {
 		gameBoard[map] = playerXO;
 		return true; //Returns as true (valid) if not
 	
-	
-}
+        }
 
 }
