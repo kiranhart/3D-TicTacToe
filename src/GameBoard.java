@@ -15,23 +15,27 @@ public class GameBoard {
 	}
 
 	private int mapFromLvlRowCol(int lvl, int row, int col) {
+		//This layouts the overall GameBoard structure madeup of the 3 levels including Rows and Columns
 		int map = (lvl - 1) * 9;  // 1:0 to 8, 2: 9 to 17, 3: 18 to 36
 		map = map + (row - 1) * 3;  
 		map = map + (col - 1);
 		return map;
 	}
 	
+	//Levels in the Gameboard
 	private int levelFromMap(int map) {
 		int level = java.lang.Math.round(map / 9);
 		return level + 1;
 	}
 	
+	//Rows structured in the GameBoard
 	private int rowFromMap(int map) {
 		int subMap = map % 9;
 		int row = java.lang.Math.round(subMap / 3);
 		return row + 1;
 	}
 	
+	//Columns structured in the GameBoard
 	private int colFromMap(int map) {
 		int subMap = map % 9;
 		subMap = subMap % 3;
