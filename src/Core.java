@@ -4,6 +4,7 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
@@ -11,19 +12,19 @@ import org.eclipse.swt.widgets.Shell;
 
 public class Core {
 
-	//The display and shell variables used to setup the window.
+	// The display and shell variables used to setup the window.
 	private Display display;
 	private Shell shell;
-	
+	private GameBoard gameBoard;
+
 	/*
-	 * The List to store the all of the buttons
-	 * that can be clicked in the game.
+	 * The List to store the all of the buttons that can be clicked in the game.
 	 */
 	private List<Button> gridButtons = new ArrayList<>();
 
 	/*
-	 * Determine which player turn it is, start with X
-	 * then swap to player O, then back, vis-versa
+	 * Determine which player turn it is, start with X then swap to player O,
+	 * then back, vis-versa
 	 */
 	private boolean playerXTurn = true;
 
@@ -36,14 +37,14 @@ public class Core {
 	}
 
 	/*
-	 * This method will perform everything that is needed
-	 * in order to setup the game and display the game.
-	 * Initialize the display and shell, generate the buttons
-	 * add the click listeners, set the size, and code for disposal
+	 * This method will perform everything that is needed in order to setup the
+	 * game and display the game. Initialize the display and shell, generate the
+	 * buttons add the click listeners, set the size, and code for disposal
 	 */
 	private void setupDisplay() {
 		display = new Display();
 		shell = new Shell(display);
+		gameBoard = new GameBoard();
 
 		// Set the title
 		shell.setText("3D Tic Tac Toe");
@@ -65,7 +66,6 @@ public class Core {
 		}
 
 		shell.dispose();
-
 	}
 
 	/*
@@ -76,22 +76,24 @@ public class Core {
 		int x = 0;
 		int y = 0;
 
-		//Loop through 27 times, 3x3 -- 3 times
+		// Loop through 27 times, 3x3 -- 3 times
 		for (int i = 0; i < 27; i++) {
 			/*
-			 * Create an empty button with the size 60x60 pixels
-			 * then set the location according the the x and y.
+			 * Create an empty button with the size 60x60 pixels then set the
+			 * location according the the x and y.
 			 */
 			Button button = new Button(shell, SWT.PUSH);
 			button.setSize(new Point(60, 60));
 			button.setLocation(new Point(x, y));
+			button.setFont(new Font(display, "Tahoma", 10, SWT.BOLD));
+			button.setText("" + i);
 			button.setVisible(true);
 
-			//Add 60 to x
+			// Add 60 to x
 			x += 60;
-			//If x is 180; so 3 buttons on a row, set
-			//x to 0 to start on the left then increase y
-			//by 60 to move down a row.
+			// If x is 180; so 3 buttons on a row, set
+			// x to 0 to start on the left then increase y
+			// by 60 to move down a row.
 			if (x == 180) {
 				x = 0;
 				y += 60;
@@ -99,17 +101,18 @@ public class Core {
 				/*
 				 * Add Spacer in between the grids
 				 */
+
 				if (y == 180 || y == 380 || y == 580) {
 					Button filler = new Button(shell, SWT.PUSH);
 					filler.setSize(new Point(180, 20));
 					filler.setLocation(new Point(x, y));
 					filler.setVisible(true);
-					//add 20 to keep formatting nice
+					// add 20 to keep formatting nice
 					y += 20;
 				}
 			}
 
-			//Finally add the buttons to the list for later use.
+			// Finally add the buttons to the list for later use.
 			gridButtons.add(button);
 		}
 	}
@@ -139,23 +142,37 @@ public class Core {
 		}
 
 		/*
-		 * Check when the player clicks on the button, if they
-		 * click perform any check needed to place the O or X 
-		 * character, and check wins.
+		 * Check when the player clicks on the button, if they click perform any
+		 * check needed to place the O or X character, and check wins.
 		 */
 		@Override
 		public void mouseDown(MouseEvent e) {
-			
+
 			/*
-			 * Swap between player turns, if it was player
-			 * x's turn, switch to O, same thing for o to x. 
+			 * Swap between player turns, if it was player x's turn, switch to
+			 * O, same thing for o to x.
 			 */
-			if (playerXTurn) {
-				button.setText("X");
-				playerXTurn = false;
-			} else {
-				button.setText("O");
-				playerXTurn = true;
+			// if (playerXTurn) {
+			//
+			// if (game)
+			//
+			// button.setText("X");
+			// playerXTurn = false;
+			// } else {
+			// button.setText("O");
+			// playerXTurn = true;
+			// }
+
+			System.out.println("Button id: " + button.getText());
+			
+			List<String[][]> grids = new ArrayList<>();
+			
+			for (int i = 0; i < 3; i++) {
+				String[][] grid = new String[][] { 
+						{ " ", " ", " " }, 
+						{ " ", "X", " " }, 
+						{ " ", " ", " " } };
+				grids.add(grid);
 			}
 		}
 
