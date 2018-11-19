@@ -16,7 +16,8 @@ public class Core {
 	private Display display;
 	private Shell shell;
 	private GameBoard gameBoard;
-
+	private int clickedButtonID = 0;
+	
 	/*
 	 * The List to store the all of the buttons that can be clicked in the game.
 	 */
@@ -85,8 +86,8 @@ public class Core {
 			Button button = new Button(shell, SWT.PUSH);
 			button.setSize(new Point(60, 60));
 			button.setLocation(new Point(x, y));
-			button.setFont(new Font(display, "Tahoma", 10, SWT.BOLD));
-			button.setText("" + i);
+//			button.setFont(new Font(display, "Tahoma", 10, SWT.BOLD));
+			button.setText("");
 			button.setVisible(true);
 
 			// Add 60 to x
@@ -152,28 +153,21 @@ public class Core {
 			 * Swap between player turns, if it was player x's turn, switch to
 			 * O, same thing for o to x.
 			 */
-			// if (playerXTurn) {
-			//
-			// if (game)
-			//
-			// button.setText("X");
-			// playerXTurn = false;
-			// } else {
-			// button.setText("O");
-			// playerXTurn = true;
-			// }
 
-			System.out.println("Button id: " + button.getText());
 			
-			List<String[][]> grids = new ArrayList<>();
+//			System.out.println("Button id: " + button.getText());			
+//			List<String[][]> grids = new ArrayList<>();
+//			
+//			for (int i = 0; i < 3; i++) {
+//				String[][] grid = new String[][] { 
+//						{ " ", " ", " " }, 
+//						{ " ", "X", " " }, 
+//						{ " ", " ", " " } };
+//				grids.add(grid);
+//			}
 			
-			for (int i = 0; i < 3; i++) {
-				String[][] grid = new String[][] { 
-						{ " ", " ", " " }, 
-						{ " ", "X", " " }, 
-						{ " ", " ", " " } };
-				grids.add(grid);
-			}
+			clickedButtonID = gridButtons.indexOf(button);
+			//if (clickedButtonID = )
 		}
 
 		@Override
