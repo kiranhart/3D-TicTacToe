@@ -4,7 +4,6 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
@@ -17,7 +16,7 @@ public class Core {
 	private Shell shell;
 	private GameBoard gameBoard;
 	private int clickedButtonID = 0;
-	
+
 	/*
 	 * The List to store the all of the buttons that can be clicked in the game.
 	 */
@@ -86,8 +85,8 @@ public class Core {
 			Button button = new Button(shell, SWT.PUSH);
 			button.setSize(new Point(60, 60));
 			button.setLocation(new Point(x, y));
-//			button.setFont(new Font(display, "Tahoma", 10, SWT.BOLD));
-			button.setText("");
+			// button.setFont(new Font(display, "Tahoma", 10, SWT.BOLD));
+			//button.setText("" + i);
 			button.setVisible(true);
 
 			// Add 60 to x
@@ -149,25 +148,39 @@ public class Core {
 		@Override
 		public void mouseDown(MouseEvent e) {
 
-			/*
-			 * Swap between player turns, if it was player x's turn, switch to
-			 * O, same thing for o to x.
-			 */
-
-			
-//			System.out.println("Button id: " + button.getText());			
-//			List<String[][]> grids = new ArrayList<>();
-//			
-//			for (int i = 0; i < 3; i++) {
-//				String[][] grid = new String[][] { 
-//						{ " ", " ", " " }, 
-//						{ " ", "X", " " }, 
-//						{ " ", " ", " " } };
-//				grids.add(grid);
-//			}
-			
+			//Get the button index in the array on click.
 			clickedButtonID = gridButtons.indexOf(button);
-			//if (clickedButtonID = )
+			
+			/*
+			 * Mr. Nestor's mapping method to get the specific level, row, column 
+			 * depending on which button is clicked and it's ID, in a single
+			 * dimensional array. 
+			 */
+			double remainder = clickedButtonID % 9;
+			int level = (int) clickedButtonID / 9;
+			int row = (int) remainder / 3;
+			int col = (int) remainder % 3;
+			
+			//Check if the move can be made to the specific level, row and column by checking if the space is blank 
+			if (gameBoard.checkMove(Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1)).equalsIgnoreCase(GameBoard.playerFree)) {
+				//Make a move depending on who's turn it is on the specific level, row and column.
+				if (gameBoard.makeMove((playerXTurn) ? GameBoard.playerX :  GameBoard.playerO, Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1))) {
+				
+					System.out.println("Made move to level: " + level + " row: " + row + " col: " + col);
+					
+					/*
+					 * Update the button text to let the player know which player
+					 * made a move onto that grid slot.
+					 */
+					button.setText((playerXTurn) ? GameBoard.playerX :  GameBoard.playerO);
+					
+					//Swap the player turn.
+					playerXTurn = !playerXTurn;
+				}
+			} else {
+				System.out.println("The player: \"" + button.getText() + "\" already chose there.");
+			}
+
 		}
 
 		@Override
