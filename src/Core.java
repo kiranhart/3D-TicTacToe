@@ -7,6 +7,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class Core {
@@ -16,6 +17,9 @@ public class Core {
 	private Shell shell;
 	private GameBoard gameBoard;
 	private int clickedButtonID = 0;
+	
+	//Data swt widgets 
+	private Button reset;
 
 	/*
 	 * The List to store the all of the buttons that can be clicked in the game.
@@ -56,7 +60,7 @@ public class Core {
 		addClickListeners();
 
 		shell.pack();
-		shell.setSize(196, 637);
+		shell.setSize(400, 618);
 		shell.setVisible(true);
 
 		// Check for if the x button is closed.
@@ -102,8 +106,9 @@ public class Core {
 				 * Add Spacer in between the grids
 				 */
 
-				if (y == 180 || y == 380 || y == 580) {
-					Button filler = new Button(shell, SWT.PUSH);
+				if (y == 180 || y == 380) {
+					//Button filler = new Button(shell, SWT.BORDER);
+					Label filler = new Label(shell, SWT.PUSH);
 					filler.setSize(new Point(180, 20));
 					filler.setLocation(new Point(x, y));
 					filler.setVisible(true);
@@ -115,6 +120,12 @@ public class Core {
 			// Finally add the buttons to the list for later use.
 			gridButtons.add(button);
 		}
+		
+		reset = new Button(shell, SWT.PUSH);
+		reset.setSize(new Point(180, 60));
+		reset.setLocation(new Point(195, 510));
+		reset.setText("Restart Game");
+		reset.setVisible(true);
 	}
 
 	/*
@@ -123,10 +134,11 @@ public class Core {
 	 * button by index I.
 	 */
 	private void addClickListeners() {
-		for (int i = 0; i < gridButtons.size(); i++)
+		for (int i = 0; i < gridButtons.size(); i++) {
 			gridButtons.get(i).addMouseListener(new MouseListeners(gridButtons.get(i)));
+		}
 	}
-
+	
 	/*
 	 * This is an inner class that implements the mouse listener this helps
 	 * minimize the code as much as possible, so I can loop through each button
@@ -155,6 +167,7 @@ public class Core {
 			 * Mr. Nestor's mapping method to get the specific level, row, column 
 			 * depending on which button is clicked and it's ID, in a single
 			 * dimensional array. 
+			 * https://github.com/Greg5519/ICS4C0/blob/master/Topic%20B%20Programming%20Skills/3D%20TTT%20Mapper.txt
 			 */
 			double remainder = clickedButtonID % 9;
 			int level = (int) clickedButtonID / 9;
@@ -190,6 +203,8 @@ public class Core {
 		@Override
 		public void mouseUp(MouseEvent e) {
 		}
+
+
 	}
 
 	/*
