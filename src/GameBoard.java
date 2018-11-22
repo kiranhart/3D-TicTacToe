@@ -63,7 +63,7 @@ public class GameBoard {
 	
         }
 	public String[] RefreshBoard() {
-		//Put the already filled game board to an empty state
+		//Loop the already filled game board to an empty state
 		for( int i = 0; i < gameBoard.length; i++)
 			gameBoard[i] = playerFree; 
 		
