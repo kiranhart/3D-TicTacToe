@@ -62,11 +62,11 @@ public class GameBoard {
 		return true; //Returns as true (valid) if not
 	
         }
-	public String[] RefreshBoard() {
+	public void RefreshBoard() {
 		//Loop the already filled game board to an empty state
 		for( int i = 0; i < gameBoard.length; i++)
-			gameBoard[i] = playerFree; 
+			gameBoard[i] = " "; 
 		
-		return gameBoard; //Return the board
+		
 }
 }
