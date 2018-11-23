@@ -21,7 +21,8 @@ public class Core {
 	private int playerOneScore;
 	private int playerTwoScore;
 	private long startTime;
-
+	private boolean needsRefresh;
+	
 	// Data swt widgets
 	private Button reset;
 	private Button playerOneScoreButton;
@@ -69,6 +70,8 @@ public class Core {
 		playerOneScore = 0;
 		playerTwoScore = 0;
 		startTime = System.currentTimeMillis();
+		
+		needsRefresh = false;
 
 		// Setup the grids / buttons
 		generateGridButtons();
@@ -188,6 +191,7 @@ public class Core {
 		for (int i = 0; i < gridButtons.size(); i++) {
 			gridButtons.get(i).addMouseListener(new MouseListeners(gridButtons.get(i)));
 		}
+		reset.addMouseListener(new MouseListeners(reset));
 	}
 	
 	/*
@@ -195,6 +199,7 @@ public class Core {
 	 */
 	private void resetGame() {
 		//Reset GameBoard
+		gameBoard.RefreshBoard();
 		
 		//Reset Text;
 		for (Button b : gridButtons) {
@@ -202,7 +207,9 @@ public class Core {
 		}
 		
 		timeToMove.setText(TIME_TO_MOVE_NO_MOVE);
+		startTime = System.currentTimeMillis();
 		updateButtonScores();
+		needsRefresh = false;
 	}
 	
 	/*
@@ -233,54 +240,71 @@ public class Core {
 		 */
 		@Override
 		public void mouseDown(MouseEvent e) {
-
+			
+			/*
+			 * Check if the restart button is clicked
+			 * if so, reset the game.
+			 */
+			if (button.getText().equalsIgnoreCase(RESET_BTN_TEXT)) {
+				resetGame();
+				return;
+			}
+			
 			// Get the button index in the array on click.
 			clickedButtonID = gridButtons.indexOf(button);
-
-			/*
-			 * Mr. Nestor's mapping method to get the specific level, row,
-			 * column depending on which button is clicked and it's ID, in a
-			 * single dimensional array.
-			 * https://github.com/Greg5519/ICS4C0/blob/master/Topic%20B%20Programming%20Skills/3D%20TTT%20Mapper.txt
-			 */
-			double remainder = clickedButtonID % 9;
-			int level = (int) clickedButtonID / 9;
-			int row = (int) remainder / 3;
-			int col = (int) remainder % 3;
-
-			// Check if the move can be made to the specific level, row and
-			// column by checking if the space is blank
-			if (gameBoard.checkMove(Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1)).equalsIgnoreCase(GameBoard.playerFree)) {
-				// Make a move depending on who's turn it is on the specific
-				// level, row and column.
-				if (gameBoard.makeMove((playerXTurn) ? GameBoard.playerX : GameBoard.playerO, Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1))) {
-
-					System.out.println("Made move to level: " + level + " row: " + row + " col: " + col);
-
-					/*
-					 * Update the button text to let the player know which
-					 * player made a move onto that grid slot.
-					 */
-					button.setText((playerXTurn) ? GameBoard.playerX : GameBoard.playerO);
-					
-					if (isWin(GameBoard.playerX)) {
-						resetGame();
-						playerOneScore++;
-					} else if (isWin(GameBoard.playerO)) {
-						resetGame();
-						playerTwoScore++;
-					} else {
-						// Swap the player turn.
-						playerXTurn = !playerXTurn;
-						
-						// Record Time it took to make move
-						long secs = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-						timeToMove.setText(String.valueOf((secs <= 0) ? "Move took less than 1 sec." : TIME_TO_MOVE + String.valueOf(secs) + "s"));
-						startTime = System.currentTimeMillis();
-					}
-				}
+			
+			if (isWin(GameBoard.playerX)) {
+				needsRefresh = true;
+				playerOneScore++;
+			} else if (isWin(GameBoard.playerO)) {
+				needsRefresh = true;
+				playerTwoScore++;
 			} else {
-				System.out.println("The player: \"" + button.getText() + "\" already chose there.");
+				
+				/*
+				 * Mr. Nestor's mapping method to get the specific level, row,
+				 * column depending on which button is clicked and it's ID, in a
+				 * single dimensional array.
+				 * https://github.com/Greg5519/ICS4C0/blob/master/Topic%20B%20Programming%20Skills/3D%20TTT%20Mapper.txt
+				 */
+				double remainder = clickedButtonID % 9;
+				int level = (int) clickedButtonID / 9;
+				int row = (int) remainder / 3;
+				int col = (int) remainder % 3;
+
+				// Check if the move can be made to the specific level, row and
+				// column by checking if the space is blank
+				if (gameBoard.checkMove(Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1)).equalsIgnoreCase(GameBoard.playerFree)) {
+					// Make a move depending on who's turn it is on the specific
+					// level, row and column.
+					if (gameBoard.makeMove((playerXTurn) ? GameBoard.playerX : GameBoard.playerO, Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1))) {
+						
+						//Check if game needs to be refreshed
+						if (!needsRefresh) {
+							
+							System.out.println("Made move to level: " + level + " row: " + row + " col: " + col);
+
+							/*
+							 * Update the button text to let the player know which
+							 * player made a move onto that grid slot.
+							 */
+							button.setText((playerXTurn) ? GameBoard.playerX : GameBoard.playerO);
+							
+							// Swap the player turn.
+							playerXTurn = !playerXTurn;
+							
+							// Record Time it took to make move
+							long secs = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+							timeToMove.setText(String.valueOf((secs <= 0) ? "Move took less than 1 sec." : TIME_TO_MOVE + String.valueOf(secs) + "s"));
+							startTime = System.currentTimeMillis();
+						
+						} else {
+							System.out.println("The game needs to be restarted to continue.");
+						}
+					}
+				} else {
+					System.out.println("The player: \"" + button.getText() + "\" already chose there.");
+				}
 			}
 		}
 
