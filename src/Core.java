@@ -16,7 +16,12 @@ public class Core {
 	// The display and shell variables used to setup the window.
 	private Display display;
 	private Shell shell;
+	
+	//Logic Classes
 	private GameBoard gameBoard;
+	private Logic logic;
+	
+	// Game score / reset
 	private int clickedButtonID = 0;
 	private int playerOneScore;
 	private int playerTwoScore;
@@ -61,8 +66,10 @@ public class Core {
 	private void setupDisplay() {
 		display = new Display();
 		shell = new Shell(display);
+		
 		gameBoard = new GameBoard();
-
+		logic = new Logic();
+		
 		// Set the title
 		shell.setText("3D Tic Tac Toe");
 
@@ -253,10 +260,10 @@ public class Core {
 			// Get the button index in the array on click.
 			clickedButtonID = gridButtons.indexOf(button);
 			
-			if (isWin(GameBoard.playerX)) {
+			if (logic.checkWinX()) {
 				needsRefresh = true;
 				playerOneScore++;
-			} else if (isWin(GameBoard.playerO)) {
+			} else if (logic.checkWinO()) {
 				needsRefresh = true;
 				playerTwoScore++;
 			} else {
@@ -316,10 +323,6 @@ public class Core {
 		public void mouseUp(MouseEvent e) {
 		}
 
-	}
-	
-	private boolean isWin(String x) {
-		return false;
 	}
 	
 	/*
