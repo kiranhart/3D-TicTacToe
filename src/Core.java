@@ -260,10 +260,10 @@ public class Core {
 			// Get the button index in the array on click.
 			clickedButtonID = gridButtons.indexOf(button);
 			
-			if (logic.checkWinX()) {
+			if (logic.checkWinnerX()) {
 				needsRefresh = true;
 				playerOneScore++;
-			} else if (logic.checkWinO()) {
+			} else if (logic.checkWinnerO()) {
 				needsRefresh = true;
 				playerTwoScore++;
 			} else {
