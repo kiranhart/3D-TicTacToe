@@ -68,7 +68,7 @@ public class Core {
 		shell = new Shell(display);
 		
 		gameBoard = new GameBoard();
-		logic = new Logic();
+		logic = new Logic(gameBoard);
 		
 		// Set the title
 		shell.setText("3D Tic Tac Toe");
@@ -215,8 +215,8 @@ public class Core {
 		
 		timeToMove.setText(TIME_TO_MOVE_NO_MOVE);
 		startTime = System.currentTimeMillis();
-		updateButtonScores();
 		needsRefresh = false;
+		playerXTurn = true;
 	}
 	
 	/*
@@ -259,59 +259,40 @@ public class Core {
 			
 			// Get the button index in the array on click.
 			clickedButtonID = gridButtons.indexOf(button);
-			
-			if (logic.checkWinnerX()) {
-				needsRefresh = true;
-				playerOneScore++;
-			} else if (logic.checkWinnerO()) {
-				needsRefresh = true;
-				playerTwoScore++;
-			} else {
+			if (gameBoard.checkMove(clickedButtonID)) {
+				// Make a move depending on who's turn it is on the specific
+				// level, row and column.
 				
-				/*
-				 * Mr. Nestor's mapping method to get the specific level, row,
-				 * column depending on which button is clicked and it's ID, in a
-				 * single dimensional array.
-				 * https://github.com/Greg5519/ICS4C0/blob/master/Topic%20B%20Programming%20Skills/3D%20TTT%20Mapper.txt
-				 */
-				double remainder = clickedButtonID % 9;
-				int level = (int) clickedButtonID / 9;
-				int row = (int) remainder / 3;
-				int col = (int) remainder % 3;
-
-				// Check if the move can be made to the specific level, row and
-				// column by checking if the space is blank
-				if (gameBoard.checkMove(Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1)).equalsIgnoreCase(GameBoard.playerFree)) {
-					// Make a move depending on who's turn it is on the specific
-					// level, row and column.
-					if (gameBoard.makeMove((playerXTurn) ? GameBoard.playerX : GameBoard.playerO, Integer.valueOf(level + 1), Integer.valueOf(row + 1), Integer.valueOf(col + 1))) {
+				String player = (playerXTurn) ? GameBoard.playerX : GameBoard.playerO;
+				
+				if (gameBoard.makeMove(player, clickedButtonID))  {
+					
+					if (!needsRefresh) {
 						
-						//Check if game needs to be refreshed
-						if (!needsRefresh) {
-							
-							System.out.println("Made move to level: " + level + " row: " + row + " col: " + col);
-
-							/*
-							 * Update the button text to let the player know which
-							 * player made a move onto that grid slot.
-							 */
-							button.setText((playerXTurn) ? GameBoard.playerX : GameBoard.playerO);
-							
-							// Swap the player turn.
-							playerXTurn = !playerXTurn;
-							
-							// Record Time it took to make move
-							long secs = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-							timeToMove.setText(String.valueOf((secs <= 0) ? "Move took less than 1 sec." : TIME_TO_MOVE + String.valueOf(secs) + "s"));
-							startTime = System.currentTimeMillis();
-						
-						} else {
-							System.out.println("The game needs to be restarted to continue.");
+						if (logic.checkWinnerX()) {
+							needsRefresh = true;
+							playerOneScore++;
+							updateButtonScores();
+							System.out.println("Player X has won");
+						} else if (logic.checkWinnerO()) {
+							needsRefresh = true;
+							playerTwoScore++;
+							updateButtonScores();
+							System.out.println("Player O has won");
 						}
-					}
+						
+						button.setText((playerXTurn) ? GameBoard.playerX : GameBoard.playerO);
+						playerXTurn = !playerXTurn;
+						
+						long secs = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+						timeToMove.setText(String.valueOf((secs <= 0) ? "Move took less than 1 sec." : TIME_TO_MOVE + String.valueOf(secs) + "s"));
+						startTime = System.currentTimeMillis();
+					} 
 				} else {
-					System.out.println("The player: \"" + button.getText() + "\" already chose there.");
+					System.out.println("The game needs to be restarted to continue.");
 				}
+			} else {
+				System.out.println("Could not make the move!");
 			}
 		}
 
