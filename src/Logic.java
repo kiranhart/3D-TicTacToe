@@ -1,6 +1,10 @@
 public class Logic {
 
-	private GameBoard gm = new GameBoard();
+	private GameBoard gm;
+	
+	public Logic (GameBoard gm) {
+		this.gm = gm;
+	}
 	
 	public String checkWinner() {
 		
@@ -175,14 +179,14 @@ public class Logic {
 	}
 
 	public boolean checkWinnerX() {
-		if (checkWinner() == "XXX") {
+		if (checkWinner().equalsIgnoreCase("XXX")) {
 			return true;
 		}
 		return false;
 	}
 
 	public boolean checkWinnerO() {
-		if (checkWinner() == "OOO") {
+		if (checkWinner().equalsIgnoreCase("OOO")) {
 			return true;
 		}
 		return false;
